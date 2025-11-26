@@ -2,7 +2,7 @@ package modelos.classes;
 
 import java.util.Date;
 
-public class Movimentacoes {
+public class Movimentacao {
     private int idMovimentacao;
     private int idVeiculo;
     private int idTipoDespesa;
@@ -10,10 +10,10 @@ public class Movimentacoes {
     private Date dataMovimentacao;
     private double valor;
 
-    public Movimentacoes() {
+    public Movimentacao() {
     }
     
-    public Movimentacoes(int idMovimentacao, int idVeiculo, int idTipoDespesa, String descricao, Date dataMovimentacao, double valor) {
+    public Movimentacao(int idMovimentacao, int idVeiculo, int idTipoDespesa, String descricao, Date dataMovimentacao, double valor) {
         this.idMovimentacao = idMovimentacao;
         this.idVeiculo = idVeiculo;
         this.idTipoDespesa = idTipoDespesa;
@@ -69,6 +69,4 @@ public class Movimentacoes {
     public void setValor(double valor) {
         this.valor = valor;
     }
-    
-    
 }
