@@ -3,17 +3,17 @@ package persistencia;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import modelos.classes.Movimentacoes;
-import modelos.interfaces.MovimentacoesCRUD;
+import modelos.classes.Movimentacao;
+import modelos.interfaces.MovimentacaoCRUD;
 
-public class MovimentacoesDAO implements MovimentacoesCRUD {
+public class MovimentacaoDAO implements MovimentacaoCRUD {
   private String nomeDoArquivoNoDisco = null;
 
-  public MovimentacoesDAO(){
+  public MovimentacaoDAO(){
     nomeDoArquivoNoDisco = "./src/bancodedados/Movimentacoes.txt";
   }
   @Override
-  public void salvar(Movimentacoes movimentacao) throws Exception {
+  public void salvar(Movimentacao movimentacao) throws Exception {
     try{
       BufferedWriter bw =new BufferedWriter(new FileWriter(nomeDoArquivoNoDisco,true));
       //Escreve no arquivo
