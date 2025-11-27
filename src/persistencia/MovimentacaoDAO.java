@@ -22,11 +22,12 @@ public class MovimentacaoDAO implements IMovimentacaoCRUD {
     public void salvar(Movimentacao movimentacao) throws Exception {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(nomeDoArquivoNoDisco, true));
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             String str = movimentacao.getIdMovimentacao() + ";";
             str += movimentacao.getIdVeiculo() + ";";
             str += movimentacao.getIdTipoDespesa() + ";";
             str += movimentacao.getDescricao() + ";";
-            str += movimentacao.getDataMovimentacao() + ";";
+            str += sdf.format(movimentacao.getDataMovimentacao()) + ";";
             str += movimentacao.getValor() + "\n";
             bw.write(str);
             bw.close();
@@ -70,14 +71,12 @@ public class MovimentacaoDAO implements IMovimentacaoCRUD {
         try {
             int linhas = 0;
             BufferedReader br = new BufferedReader(new FileReader(nomeDoArquivoNoDisco));
-
             while (br.readLine() != null) {
                 linhas++;
             }
-
             br.close();
-            return linhas + 1;
-
+            return linhas;
+            
         } catch (Exception erro) {
             return 1;
         }

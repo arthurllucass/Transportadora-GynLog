@@ -3,12 +3,12 @@ package modelos.classes;
 import java.util.Date;
 
 public class Movimentacao {
-    private int idMovimentacao;
-    private int idVeiculo;
-    private int idTipoDespesa;
-    private String descricao;
+    private int idMovimentacao = 0;
+    private int idVeiculo = 0;
+    private int idTipoDespesa = 0;
+    private String descricao = "";
     private Date dataMovimentacao;
-    private double valor;
+    private double valor = 0;
 
     public Movimentacao() {
     }
