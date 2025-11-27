@@ -1,8 +1,12 @@
 package persistencia;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import modelos.classes.Movimentacao;
 import modelos.interfaces.IMovimentacaoCRUD;
 
@@ -18,12 +22,13 @@ public class MovimentacaoDAO implements IMovimentacaoCRUD {
     public void salvar(Movimentacao movimentacao) throws Exception {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(nomeDoArquivoNoDisco, true));
-            //Escreve no arquivo
             String str = movimentacao.getIdMovimentacao() + ";";
             str += movimentacao.getIdVeiculo() + ";";
-            str += movimentacao.getDescricao() + "\n";
+            str += movimentacao.getIdTipoDespesa() + ";";
+            str += movimentacao.getDescricao() + ";";
+            str += movimentacao.getDataMovimentacao() + ";";
+            str += movimentacao.getValor() + "\n";
             bw.write(str);
-            //fecha o arquivo
             bw.close();
         } catch (Exception erro) {
             String msg = "Persistencia - Metodo Salvar - " + erro.getMessage();
@@ -33,22 +38,48 @@ public class MovimentacaoDAO implements IMovimentacaoCRUD {
 
     @Override
     public ArrayList<Movimentacao> listaDeMovimentacoes() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            ArrayList<Movimentacao> listaDeMovimentacoes = new ArrayList<>();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            BufferedReader br = new BufferedReader(new FileReader(nomeDoArquivoNoDisco));
+            String linhaDoArquivo = br.readLine();
+
+            while (linhaDoArquivo != null) {
+                String campos[] = linhaDoArquivo.split(";");
+                int idMovimentacao = Integer.parseInt(campos[0]);
+                int idVeiculo = Integer.parseInt(campos[1]);
+                int idTipoDespesa = Integer.parseInt(campos[2]);
+                String descricao = campos[3];
+                Date data = sdf.parse(campos[4]);
+                double valor = Double.parseDouble(campos[5]);
+
+                Movimentacao movimentacoesDoArquivo = new Movimentacao(idMovimentacao, idVeiculo, idTipoDespesa,
+                        descricao, data, valor);
+                listaDeMovimentacoes.add(movimentacoesDoArquivo);
+                linhaDoArquivo = br.readLine();
+            }
+            br.close();
+            return listaDeMovimentacoes;
+        } catch (Exception erro) {
+            String msg = "Persistencia - Metodo Salvar - " + erro.getMessage();
+            throw new Exception(msg);
+        }
     }
 
-    @Override
-    public Movimentacao buscarPorId(int idMovimentacao) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    public int gerarId() throws Exception {
+        try {
+            int linhas = 0;
+            BufferedReader br = new BufferedReader(new FileReader(nomeDoArquivoNoDisco));
 
-    @Override
-    public void atualizar(Movimentacao movimentacao) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+            while (br.readLine() != null) {
+                linhas++;
+            }
 
-    @Override
-    public void remover(int idMovimentacao) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+            br.close();
+            return linhas + 1;
 
+        } catch (Exception erro) {
+            return 1;
+        }
+    }
 }
