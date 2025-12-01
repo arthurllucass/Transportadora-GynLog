@@ -4,6 +4,7 @@ package controle;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.Date;
 import modelos.classes.Movimentacao;
@@ -17,7 +18,7 @@ public class MovimentacaoController {
     }
     
     public void registrarMovimentacao(int idVeiculo, int idTipoDespesa, String descricao, String dataMovimentacao, double valor) throws Exception{
-        try {
+ // devo conversar com Augusto e Akira para ver se id veiculo e despesa existem!
             if (idVeiculo <= 0) throw new Exception ("ID do veículo inválido!");
             if (idTipoDespesa <= 0) throw new Exception ("ID da despesa inválida!");
             if (descricao ==  null || descricao.trim().equals("")) throw new Exception ("Descrição vazia!");
@@ -28,10 +29,6 @@ public class MovimentacaoController {
             Date dataConvertida = sdf.parse(dataMovimentacao);
             Movimentacao movimentacao = new Movimentacao(idMovimentacao, idVeiculo, idTipoDespesa, descricao, dataConvertida, valor);
             movimentacaoDAO.salvar(movimentacao);
-            
-        } catch (Exception erro) {
-            throw erro;
-        }
     }
     
     public ArrayList<Movimentacao> listarMovimentacoes() throws Exception {
@@ -40,7 +37,9 @@ public class MovimentacaoController {
     
     public boolean eDataValida(String dataMovimentacao ) {
         try {
-            DateTimeFormatter formatacaoDeData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            dataMovimentacao = dataMovimentacao.trim(); //tirar espaços do começo e final da data
+            dataMovimentacao = dataMovimentacao.replace("_", ""); //retirar esses caracteres para que haja a validaçao
+            DateTimeFormatter formatacaoDeData = DateTimeFormatter.ofPattern("dd/MM/yyyy");//.withResolverStyle(ResolverStyle.STRICT);
             LocalDate dataLocal = LocalDate.parse(dataMovimentacao, formatacaoDeData);
             return true;
         } catch (Exception erro) {

@@ -32,8 +32,7 @@ public class MovimentacaoDAO implements IMovimentacaoCRUD {
             bw.write(str);
             bw.close();
         } catch (Exception erro) {
-            String msg = "Persistencia - Metodo Salvar - " + erro.getMessage();
-            throw new Exception(msg);
+            throw new Exception("Erro ao salvar a movimentação: " + erro.getMessage());
         }
     }
 
@@ -62,8 +61,7 @@ public class MovimentacaoDAO implements IMovimentacaoCRUD {
             br.close();
             return listaDeMovimentacoes;
         } catch (Exception erro) {
-            String msg = "Persistencia - Metodo Salvar - " + erro.getMessage();
-            throw new Exception(msg);
+            throw new Exception("Erro ao ler as movimentações: " + erro.getMessage());
         }
     }
 
@@ -75,7 +73,7 @@ public class MovimentacaoDAO implements IMovimentacaoCRUD {
                 linhas++;
             }
             br.close();
-            return linhas;
+            return linhas + 1;
             
         } catch (Exception erro) {
             return 1;
