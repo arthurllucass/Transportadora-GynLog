@@ -35,11 +35,16 @@ public class MovimentacaoController {
         return movimentacaoDAO.listaDeMovimentacoes();
     }
     
+    public void remover (int idMovimentacao) throws Exception {
+        if (movimentacaoDAO.buscarPorId(idMovimentacao) == null) throw new Exception("Movimentação não encontrada!");
+        movimentacaoDAO.remover(idMovimentacao);
+    }
+    
     public boolean eDataValida(String dataMovimentacao ) {
         try {
+            if (dataMovimentacao == null || dataMovimentacao.length() != 10) return false;
             dataMovimentacao = dataMovimentacao.trim(); //tirar espaços do começo e final da data
-            dataMovimentacao = dataMovimentacao.replace("_", ""); //retirar esses caracteres para que haja a validaçao
-            DateTimeFormatter formatacaoDeData = DateTimeFormatter.ofPattern("dd/MM/yyyy");//.withResolverStyle(ResolverStyle.STRICT);
+            DateTimeFormatter formatacaoDeData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDate dataLocal = LocalDate.parse(dataMovimentacao, formatacaoDeData);
             return true;
         } catch (Exception erro) {

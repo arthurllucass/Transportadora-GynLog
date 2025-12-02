@@ -64,6 +64,63 @@ public class MovimentacaoDAO implements IMovimentacaoCRUD {
             throw new Exception("Erro ao ler as movimentações: " + erro.getMessage());
         }
     }
+    
+    @Override
+    public void remover(int idMovimentacao) throws Exception {
+        try {
+            ArrayList<Movimentacao> listagem = null;
+            listagem = this.listaDeMovimentacoes();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            BufferedWriter bw = new BufferedWriter(new FileWriter(nomeDoArquivoNoDisco));
+
+            for (Movimentacao movimentacao : listagem) {
+                if (movimentacao.getIdMovimentacao() != idMovimentacao) {
+                    String str = movimentacao.getIdMovimentacao() + ";";
+                    str += movimentacao.getIdVeiculo() + ";";
+                    str += movimentacao.getIdTipoDespesa() + ";";
+                    str += movimentacao.getDescricao() + ";";
+                    str += sdf.format(movimentacao.getDataMovimentacao()) + ";";
+                    str += movimentacao.getValor() + "\n";
+                    bw.write(str);
+                }
+            }
+            bw.close();
+        } catch (Exception erro) {
+            throw new Exception("Erro ao remover a movimentação: " + erro.getMessage());
+        }
+    }
+    
+    @Override
+    public Movimentacao buscarPorId(int idMovimentacao) throws Exception {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(nomeDoArquivoNoDisco));
+            String linha = "";
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            
+            while ((linha = br.readLine()) != null) {
+                String campos[] = linha.split(";");
+                int idMovimentacaoAux = Integer.parseInt(campos[0]);
+                
+                if (idMovimentacaoAux == idMovimentacao) {
+                int idVeiculo = Integer.parseInt(campos[1]);
+                int idTipoDespesa = Integer.parseInt(campos[2]);
+                String descricao = campos[3];
+                Date data = sdf.parse(campos[4]);
+                double valor = Double.parseDouble(campos[5]);
+                
+                    Movimentacao objMovimentacao = null;
+                    objMovimentacao = new Movimentacao(idMovimentacaoAux, idVeiculo, idTipoDespesa,
+                        descricao, data, valor);
+                    br.close();
+                    return objMovimentacao;
+                }
+            }
+            br.close();
+            return null;
+        } catch (Exception erro) {
+            throw new Exception("Erro ao buscar o ID da Movimentação: " + erro.getMessage());
+        }
+    }
 
     public int gerarId() throws Exception {
         try {
