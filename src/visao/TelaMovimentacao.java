@@ -140,6 +140,11 @@ public class TelaMovimentacao extends javax.swing.JFrame {
         jButtonVoltar.setFont(new java.awt.Font("Arial Black", 0, 12)); // NOI18N
         jButtonVoltar.setForeground(new java.awt.Color(0, 0, 0));
         jButtonVoltar.setText("Voltar");
+        jButtonVoltar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonVoltarActionPerformed(evt);
+            }
+        });
 
         jButtonRemover.setBackground(new java.awt.Color(204, 204, 204));
         jButtonRemover.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
@@ -244,6 +249,7 @@ public class TelaMovimentacao extends javax.swing.JFrame {
                 "ID", "Veículo", "Despesa", "Descrição", "Data", "Valor"
             }
         ));
+        jTableMovimentacoes.setFocusable(false);
         jTableMovimentacoes.setGridColor(new java.awt.Color(0, 0, 255));
         jScrollPane1.setViewportView(jTableMovimentacoes);
 
@@ -354,6 +360,12 @@ public class TelaMovimentacao extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, erro.getMessage());
         }
     }//GEN-LAST:event_jButtonRemoverActionPerformed
+
+    private void jButtonVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVoltarActionPerformed
+        TelaPrincipal tela = new TelaPrincipal();
+        tela.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButtonVoltarActionPerformed
 
 
     public static void main(String args[]) {
