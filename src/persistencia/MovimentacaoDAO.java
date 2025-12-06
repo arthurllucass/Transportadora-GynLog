@@ -2,6 +2,7 @@ package persistencia;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
@@ -123,17 +124,30 @@ public class MovimentacaoDAO implements IMovimentacaoCRUD {
     }
 
     public int gerarId() throws Exception {
+        String nomeArquivo = "./src/bancodedados/GeradorDeID_Movimentacoes.txt";
+        int ultimoId = 0;
         try {
-            int linhas = 0;
-            BufferedReader br = new BufferedReader(new FileReader(nomeDoArquivoNoDisco));
-            while (br.readLine() != null) {
-                linhas++;
+            File arquivo = new File(nomeArquivo);
+            if (!arquivo.exists()) { // caso o arquivo nao exista, cria um vazio
+                arquivo.createNewFile();
             }
+            
+            BufferedReader br = new BufferedReader(new FileReader(nomeArquivo));
+            String linha = br.readLine();
             br.close();
-            return linhas + 1;
+
+            if (linha != null && !linha.trim().isEmpty()) { //Se a linha for diferente de nulo e se a linha nao esta vazia depois de tirar os espaços
+                ultimoId = Integer.parseInt(linha.trim());
+            }
             
         } catch (Exception erro) {
-            return 1;
+            throw new Exception("Erro ao gerar o ID Movimentação: " + erro.getMessage());
         }
+        int novoId = ultimoId + 1;
+
+        BufferedWriter bw = new BufferedWriter(new FileWriter(nomeArquivo));
+        bw.write(String.valueOf(novoId)); //transforma em String
+        bw.close();
+        return novoId;
     }
 }

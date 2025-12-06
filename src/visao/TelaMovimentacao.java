@@ -2,9 +2,9 @@ package visao;
 
 import controle.MovimentacaoController;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelos.classes.Movimentacao;
@@ -18,6 +18,10 @@ public class TelaMovimentacao extends javax.swing.JFrame {
     public TelaMovimentacao() {
         initComponents();
         setLocationRelativeTo(null);
+        LocalDate hoje = LocalDate.now();
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        jFormattedTextFieldData.setText(hoje.format(formato));
+        
         try {
             if (movimentacaoController.listarMovimentacoes().isEmpty()) {
                 jButtonListar.setEnabled(false);
@@ -50,6 +54,7 @@ public class TelaMovimentacao extends javax.swing.JFrame {
         jButtonVoltar = new javax.swing.JButton();
         jButtonRemover = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
+        jButtonProcurar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableMovimentacoes = new javax.swing.JTable();
 
@@ -138,7 +143,6 @@ public class TelaMovimentacao extends javax.swing.JFrame {
 
         jButtonVoltar.setBackground(new java.awt.Color(204, 204, 204));
         jButtonVoltar.setFont(new java.awt.Font("Arial Black", 0, 12)); // NOI18N
-        jButtonVoltar.setForeground(new java.awt.Color(0, 0, 0));
         jButtonVoltar.setText("Voltar");
         jButtonVoltar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -153,6 +157,15 @@ public class TelaMovimentacao extends javax.swing.JFrame {
         jButtonRemover.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonRemoverActionPerformed(evt);
+            }
+        });
+
+        jButtonProcurar.setBackground(new java.awt.Color(204, 204, 204));
+        jButtonProcurar.setFont(new java.awt.Font("Arial Black", 0, 10)); // NOI18N
+        jButtonProcurar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/icons8-pesquisar-24.png"))); // NOI18N
+        jButtonProcurar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonProcurarActionPerformed(evt);
             }
         });
 
@@ -178,7 +191,9 @@ public class TelaMovimentacao extends javax.swing.JFrame {
                             .addComponent(jTextFieldIdTipoDespesa, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 153, Short.MAX_VALUE)
+                                .addGap(6, 6, 6)
+                                .addComponent(jButtonProcurar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -213,11 +228,13 @@ public class TelaMovimentacao extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldIdVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jFormattedTextFieldValor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
-                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButtonProcurar, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextFieldIdVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jFormattedTextFieldValor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel6)))
+                .addGap(24, 24, 24)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5)
                     .addComponent(jLabel2))
@@ -240,7 +257,6 @@ public class TelaMovimentacao extends javax.swing.JFrame {
 
         jTableMovimentacoes.setBackground(new java.awt.Color(204, 204, 204));
         jTableMovimentacoes.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
-        jTableMovimentacoes.setForeground(new java.awt.Color(0, 0, 0));
         jTableMovimentacoes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -362,10 +378,13 @@ public class TelaMovimentacao extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonRemoverActionPerformed
 
     private void jButtonVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVoltarActionPerformed
-        TelaPrincipal tela = new TelaPrincipal();
-        tela.setVisible(true);
-        this.dispose();
+
     }//GEN-LAST:event_jButtonVoltarActionPerformed
+
+    private void jButtonProcurarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonProcurarActionPerformed
+        TelaBuscarVeiculoMovimentacoes popup = new TelaBuscarVeiculoMovimentacoes(jTextFieldIdVeiculo);
+        popup.setVisible(true);
+    }//GEN-LAST:event_jButtonProcurarActionPerformed
 
 
     public static void main(String args[]) {
@@ -404,6 +423,7 @@ public class TelaMovimentacao extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonCadastrar;
     private javax.swing.JButton jButtonListar;
+    private javax.swing.JButton jButtonProcurar;
     private javax.swing.JButton jButtonRemover;
     private javax.swing.JButton jButtonVoltar;
     private javax.swing.JFormattedTextField jFormattedTextFieldData;

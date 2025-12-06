@@ -4,7 +4,6 @@ package controle;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.Date;
 import modelos.classes.Movimentacao;
@@ -24,6 +23,8 @@ public class MovimentacaoController {
             if (descricao ==  null || descricao.trim().equals("")) throw new Exception ("Descrição vazia!");
             if (eDataValida(dataMovimentacao) == false) throw new Exception ("Data inválida!");
             if (valor <= 0) throw new Exception ("Valor inválido!");
+            validarPontoVirgula(descricao, "Descrição");
+            validarPontoVirgula(dataMovimentacao, "Data");
             int idMovimentacao = movimentacaoDAO.gerarId();
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             Date dataConvertida = sdf.parse(dataMovimentacao);
@@ -49,6 +50,12 @@ public class MovimentacaoController {
             return true;
         } catch (Exception erro) {
             return false;
+        }
+    }
+    
+    public void validarPontoVirgula(String texto, String campo) throws Exception {
+        if (texto != null && texto.contains(";")) { //metodo para encontar uma determinada string, retorna um boolean
+            throw new Exception ("Não pode conter ponto e virgula (;) no campo " + campo);
         }
     }
 }
