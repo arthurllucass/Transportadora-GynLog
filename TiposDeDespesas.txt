@@ -1,0 +1,4 @@
+10;IPVA
+11;Combustivel
+12;Manutencao
+14;Seguro
