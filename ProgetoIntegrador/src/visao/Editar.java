@@ -9,6 +9,7 @@ import modelos.classes.TipoDeVeiculos;
 import modelos.classes.StatusVeiculo;
 import javax.swing.JOptionPane;
 import controller.Controle;
+import java.util.ArrayList;
 
 /**
  *
@@ -25,6 +26,7 @@ public class Editar extends javax.swing.JFrame {
      */
     public Editar() {
         initComponents();
+        carregarTabela();
         jTextField_Id.setEnabled(false);
         jTextField_Ano.setEnabled(false);
         jTextField_Modelo.setEnabled(false);
@@ -34,6 +36,17 @@ public class Editar extends javax.swing.JFrame {
         jButton_Atualizar.setEnabled(false);
         jButton_Carregar.setEnabled(false);
         jButton_Excluir.setEnabled(false);
+        // Detecta clique na linha da tabela
+        jTable_Consulta_Tabela.getSelectionModel().addListSelectionListener(event -> {
+            if (!event.getValueIsAdjusting()) {
+
+                String escolha = jComboBox_Edicao.getSelectedItem().toString();
+
+                if (escolha.equals("ATUALIZAR") || escolha.equals("EXCLUIR")) {
+                    carregarCamposDaLinha();
+                }
+            }
+        });
 
     }
 
@@ -64,14 +77,15 @@ public class Editar extends javax.swing.JFrame {
         jButton_Carregar = new javax.swing.JButton();
         jButton_Atualizar = new javax.swing.JButton();
         jButton_Excluir = new javax.swing.JButton();
-        jButton_Janela_Principal = new javax.swing.JButton();
-        jButton_Janela_Consulta = new javax.swing.JButton();
+        jButton_Adicionar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable_Consulta_Tabela = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(47, 47, 47));
 
-        jComboBox_Edicao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SELECIONE:", "ATUALIZAR", "EXCLUIR", " " }));
+        jComboBox_Edicao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SELECIONE:", "ADICIONAR", "ATUALIZAR", "EXCLUIR", " " }));
         jComboBox_Edicao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox_EdicaoActionPerformed(evt);
@@ -80,7 +94,7 @@ public class Editar extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Edição de dados:");
+        jLabel1.setText("Escolha a opção desejada");
 
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("PLACA");
@@ -141,21 +155,31 @@ public class Editar extends javax.swing.JFrame {
             }
         });
 
-        jButton_Janela_Principal.setBackground(new java.awt.Color(11, 59, 92));
-        jButton_Janela_Principal.setText("PAGINA PRINCIPAL");
-        jButton_Janela_Principal.addActionListener(new java.awt.event.ActionListener() {
+        jButton_Adicionar.setBackground(new java.awt.Color(11, 59, 92));
+        jButton_Adicionar.setText("ADICIONAR");
+        jButton_Adicionar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_Janela_PrincipalActionPerformed(evt);
+                jButton_AdicionarActionPerformed(evt);
             }
         });
 
-        jButton_Janela_Consulta.setBackground(new java.awt.Color(11, 59, 92));
-        jButton_Janela_Consulta.setText("PAGINA CONSULTA");
-        jButton_Janela_Consulta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_Janela_ConsultaActionPerformed(evt);
+        jTable_Consulta_Tabela.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID VEICULO", "PLACA", "MARCA", "MODELO", "ANO DE FABRICAÇÃO", "STATUS"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
+        jScrollPane1.setViewportView(jTable_Consulta_Tabela);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -181,30 +205,33 @@ public class Editar extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel7))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jTextField_Modelo, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel5))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jTextField_Ano, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel6))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jComboBox_Marca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jComboBox_Marca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel4))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jTextField_Modelo, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel5)))
                         .addGap(92, 92, 92)
-                        .addComponent(jButton_Atualizar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton_Excluir)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton_Carregar)))
-                .addContainerGap(469, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton_Adicionar)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jButton_Atualizar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButton_Excluir)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton_Carregar)))))
+                .addContainerGap(410, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton_Janela_Principal)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton_Janela_Consulta)
-                .addGap(101, 101, 101))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -234,7 +261,8 @@ public class Editar extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jTextField_Modelo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))
+                            .addComponent(jLabel5)
+                            .addComponent(jButton_Adicionar))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jTextField_Ano, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -243,10 +271,8 @@ public class Editar extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jComboBox_Status, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel7))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 235, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton_Janela_Principal)
-                    .addComponent(jButton_Janela_Consulta))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -304,6 +330,18 @@ public class Editar extends javax.swing.JFrame {
             jButton_Atualizar.setEnabled(false);
             jButton_Excluir.setEnabled(true);
 
+        } else if (escolha.equals("ADICIONAR")) {
+            jTextField_Id.setEnabled(false);
+            jTextField_Placa.setEnabled(true);
+            jTextField_Modelo.setEnabled(true);
+            jTextField_Ano.setEnabled(true);
+            jComboBox_Marca.setEnabled(true);
+            jComboBox_Status.setEnabled(true);
+
+            jButton_Carregar.setEnabled(true);
+            jButton_Atualizar.setEnabled(false);
+            jButton_Excluir.setEnabled(false);
+
         } else {
 
             jTextField_Id.setEnabled(false);
@@ -325,35 +363,27 @@ public class Editar extends javax.swing.JFrame {
         // TODO add your handling code here:
         try {
 
-           
-            
-
             // Lê textos SEM converter ainda
             String idTexto = jTextField_Id.getText().trim();
             String placaTexto = jTextField_Placa.getText().trim();
 
             TipoDeVeiculos obj = null;
 
-            
             if (!idTexto.isEmpty()) {
-                int id = Integer.parseInt(idTexto);  
+                int id = Integer.parseInt(idTexto);
                 obj = cont.buscarPorIdVeiculo(id);
-            } 
-            else if (!placaTexto.isEmpty()) {
+            } else if (!placaTexto.isEmpty()) {
                 obj = cont.buscarPorPlaca(placaTexto);
-            } 
-            else {
+            } else {
                 JOptionPane.showMessageDialog(null, "Digite ID ou Placa para buscar!");
                 return;
             }
 
-           
             if (obj == null) {
                 JOptionPane.showMessageDialog(null, "Veículo não encontrado!");
                 return;
             }
 
-           
             jComboBox_Marca.setSelectedItem(obj.getMarca());
             jTextField_Modelo.setText(obj.getModelo());
             jTextField_Ano.setText(String.valueOf(obj.getAnoDeFabricacao()));
@@ -382,6 +412,8 @@ public class Editar extends javax.swing.JFrame {
             );
 
             cont.atualizarVeiculo(objAtualizado);
+            carregarTabela();
+            limparCampos();
 
             JOptionPane.showMessageDialog(null, "Veículo atualizado com sucesso!");
 
@@ -394,9 +426,10 @@ public class Editar extends javax.swing.JFrame {
         // TODO add your handling code here:
         try {
             int id = Integer.parseInt(jTextField_Id.getText());
-          
-           
+
             cont.excluirVeiculo(id);
+            carregarTabela();
+            limparCampos();
             JOptionPane.showMessageDialog(null, "Item excluido com sucesso!");
 
         } catch (Exception erro) {
@@ -404,23 +437,94 @@ public class Editar extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton_ExcluirActionPerformed
 
-    private void jButton_Janela_PrincipalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_Janela_PrincipalActionPerformed
+    private void jButton_AdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_AdicionarActionPerformed
         // TODO add your handling code here:
-        PaginaPrincipal janelaPrincipal = new PaginaPrincipal();
-        janelaPrincipal.setVisible(true);
-        dispose();
-    }//GEN-LAST:event_jButton_Janela_PrincipalActionPerformed
+        try {
 
-    private void jButton_Janela_ConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_Janela_ConsultaActionPerformed
-        // TODO add your handling code here:
-        Consulta janelaConsulta = new Consulta();
-        janelaConsulta.setVisible(true);
-        dispose();
-    }//GEN-LAST:event_jButton_Janela_ConsultaActionPerformed
+            String placa = jTextField_Placa.getText().toUpperCase();
+
+            //int id = Integer.parseInt(jTextField_Id.getText());
+            String marca = (String) jComboBox_Marca.getSelectedItem();
+            String modelo = jTextField_Modelo.getText().toUpperCase();
+            int anoDeFabricacao = Integer.parseInt(jTextField_Ano.getText());
+            StatusVeiculo status = StatusVeiculo.valueOf(jComboBox_Status.getSelectedItem().toString());
+
+            TipoDeVeiculos tipoDeVeiculo = new TipoDeVeiculos();
+            tipoDeVeiculo.setPlaca(placa);
+            tipoDeVeiculo.setMarca(marca);
+            tipoDeVeiculo.setModelo(modelo);
+            tipoDeVeiculo.setAnoDeFabricacao(anoDeFabricacao);
+            tipoDeVeiculo.setStatus(status);
+
+            Controle cont = new Controle();
+            cont.adicionarVeiculo(tipoDeVeiculo);
+            carregarTabela();
+            limparCampos();
+
+            JOptionPane.showMessageDialog(this, "Veiculo adicionado com sucesso!");
+            carregarTabela();
+
+        } catch (Exception erro) {
+            JOptionPane.showMessageDialog(null, erro.getMessage());
+        }
+
+    }//GEN-LAST:event_jButton_AdicionarActionPerformed
 
     /**
      * @param args the command line arguments
      */
+    private void carregarTabela() {
+        try {
+            // Pega o modelo da tabela
+            javax.swing.table.DefaultTableModel model
+                    = (javax.swing.table.DefaultTableModel) jTable_Consulta_Tabela.getModel();
+            model.setRowCount(0); // limpa a tabela
+
+            // Chama o DAO para pegar a lista de veículos
+            Controle cont = new Controle();
+            ArrayList<TipoDeVeiculos> lista = cont.listar();
+
+            // Adiciona na JTable
+            for (TipoDeVeiculos v : lista) {
+                model.addRow(new Object[]{
+                    v.getIdVeiculo(),
+                    v.getPlaca(),
+                    v.getMarca(),
+                    v.getModelo(),
+                    v.getAnoDeFabricacao(),
+                    v.getStatus()
+                });
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao carregar tabela: " + e.getMessage());
+        }
+    }
+
+    private void carregarCamposDaLinha() {
+        int linha = jTable_Consulta_Tabela.getSelectedRow();
+
+        if (linha == -1) {
+            return; // Nenhuma linha selecionada
+        }
+
+        jTextField_Id.setText(jTable_Consulta_Tabela.getValueAt(linha, 0).toString());
+        jTextField_Placa.setText(jTable_Consulta_Tabela.getValueAt(linha, 1).toString());
+        jComboBox_Marca.setSelectedItem(jTable_Consulta_Tabela.getValueAt(linha, 2));
+        jTextField_Modelo.setText(jTable_Consulta_Tabela.getValueAt(linha, 3).toString());
+        jTextField_Ano.setText(jTable_Consulta_Tabela.getValueAt(linha, 4).toString());
+        jComboBox_Status.setSelectedItem(jTable_Consulta_Tabela.getValueAt(linha, 5).toString());
+    }
+
+    private void limparCampos() {
+        jTextField_Id.setText("");
+        jTextField_Placa.setText("");
+        jTextField_Modelo.setText("");
+        jTextField_Ano.setText("");
+        jComboBox_Marca.setSelectedIndex(0);   // volta para "SELECIONE:"
+        jComboBox_Status.setSelectedIndex(0);  // volta para "SELECIONE:"
+    }
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -444,11 +548,10 @@ public class Editar extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton_Adicionar;
     private javax.swing.JButton jButton_Atualizar;
     private javax.swing.JButton jButton_Carregar;
     private javax.swing.JButton jButton_Excluir;
-    private javax.swing.JButton jButton_Janela_Consulta;
-    private javax.swing.JButton jButton_Janela_Principal;
     private javax.swing.JComboBox<String> jComboBox_Edicao;
     private javax.swing.JComboBox<String> jComboBox_Marca;
     private javax.swing.JComboBox<String> jComboBox_Status;
@@ -460,6 +563,8 @@ public class Editar extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable_Consulta_Tabela;
     private javax.swing.JTextField jTextField_Ano;
     private javax.swing.JTextField jTextField_Id;
     private javax.swing.JTextField jTextField_Modelo;
