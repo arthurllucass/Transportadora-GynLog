@@ -15,17 +15,18 @@ import java.util.ArrayList;
  *
  * @author artur
  */
-public class Editar extends javax.swing.JFrame {
+public class TelaTipoDeVeiculo extends javax.swing.JFrame {
 
     VeiculoController cont = new VeiculoController();
 
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Editar.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaTipoDeVeiculo.class.getName());
 
     /**
      * Creates new form Editar
      */
-    public Editar() {
+    public TelaTipoDeVeiculo() {
         initComponents();
+        setLocationRelativeTo(null);
         carregarTabela();
         jTextField_Id.setEnabled(false);
         jTextField_Ano.setEnabled(false);
@@ -80,6 +81,7 @@ public class Editar extends javax.swing.JFrame {
         jButton_Adicionar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable_Consulta_Tabela = new javax.swing.JTable();
+        jButtonVoltar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -181,6 +183,13 @@ public class Editar extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTable_Consulta_Tabela);
 
+        jButtonVoltar.setText("Voltar");
+        jButtonVoltar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonVoltarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -230,6 +239,8 @@ public class Editar extends javax.swing.JFrame {
                 .addContainerGap(410, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButtonVoltar)
+                .addGap(216, 216, 216)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 759, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -272,8 +283,13 @@ public class Editar extends javax.swing.JFrame {
                             .addComponent(jComboBox_Status, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel7))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jButtonVoltar)
+                        .addGap(99, 99, 99))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -470,6 +486,12 @@ public class Editar extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButton_AdicionarActionPerformed
 
+    private void jButtonVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVoltarActionPerformed
+        TelaPrincipal telaPrincipal = new TelaPrincipal();
+        telaPrincipal.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButtonVoltarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -544,10 +566,11 @@ public class Editar extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new Editar().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new TelaTipoDeVeiculo().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonVoltar;
     private javax.swing.JButton jButton_Adicionar;
     private javax.swing.JButton jButton_Atualizar;
     private javax.swing.JButton jButton_Carregar;

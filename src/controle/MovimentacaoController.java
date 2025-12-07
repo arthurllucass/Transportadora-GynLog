@@ -58,4 +58,29 @@ public class MovimentacaoController {
             throw new Exception ("Não pode conter ponto e virgula (;) no campo " + campo);
         }
     }
+    
+    public ArrayList<Movimentacao> buscarListaDespesasDoMes(int mes, int ano) throws Exception {
+        int anoAtual = LocalDate.now().getYear();
+
+        if (mes < 1 || mes > 12) throw new Exception("Mês inválido!");
+        if (ano > anoAtual) throw new Exception("Ano inválido!");
+
+        ArrayList<Movimentacao> lista = movimentacaoDAO.buscarDespesasDoMes(mes, ano);
+        if (lista == null || lista.isEmpty()) throw new Exception("Nenhuma despesa encontrada para " + mes + "/" + ano + "!");
+
+        return lista;
+    }
+    
+    public double buscarTotalDespesasDoMes(int mes, int ano) throws Exception {
+        ArrayList<Movimentacao> lista = buscarListaDespesasDoMes(mes, ano);
+
+        double somaTotal = 0;
+        for (Movimentacao movimentacao : lista) {
+            somaTotal += movimentacao.getValor();
+        }
+
+        return somaTotal;
+    }
+
 }
+

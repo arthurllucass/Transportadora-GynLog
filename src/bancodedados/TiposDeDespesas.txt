@@ -1,0 +1,5 @@
+10;IPVA
+12;Manutenção
+76;Multa
+94;Combustivel
+

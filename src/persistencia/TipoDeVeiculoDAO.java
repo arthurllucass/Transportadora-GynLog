@@ -26,7 +26,7 @@ public class TipoDeVeiculoDAO implements ITipoDeVeiculoCRUD {
 
     //Metodo Construtor
     public TipoDeVeiculoDAO() {
-        nomeDoArquivoNoDisco = "./src/bancodedados/TiposDeDespesas.txt";
+        nomeDoArquivoNoDisco = "./src/bancodedados/TipoDeVeiculos.txt";
     }
 
     public boolean validarPlaca(String placa) {

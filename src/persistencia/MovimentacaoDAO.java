@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import modelos.classes.Movimentacao;
@@ -149,5 +151,32 @@ public class MovimentacaoDAO implements IMovimentacaoCRUD {
         bw.write(String.valueOf(novoId)); //transforma em String
         bw.close();
         return novoId;
+    }
+    
+    public ArrayList<Movimentacao> buscarDespesasDoMes(int mes, int ano) throws Exception {
+        try {
+            ArrayList<Movimentacao> listaFiltrada = new ArrayList<>();
+            ArrayList<Movimentacao> listaCompleta = listaDeMovimentacoes(); // pega a lista de movimentacoes completa
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+            for (Movimentacao movimentacao : listaCompleta) {
+
+                Date data = movimentacao.getDataMovimentacao();
+                String dataStr = sdf.format(data); //Converte a data para String para ficar mais facil de manipular
+                LocalDate local = LocalDate.parse(dataStr, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+                int mesMov = local.getMonthValue(); //metodo da classe LocalDate para pegar mes e ano
+                int anoMov = local.getYear(); 
+
+                if (mesMov == mes && anoMov == ano) {
+                    listaFiltrada.add(movimentacao);
+                }
+            }
+
+            return listaFiltrada;
+
+        } catch (Exception erro) {
+            throw new Exception("Erro ao filtrar despesas do mês: " + erro.getMessage());
+        }
     }
 }
