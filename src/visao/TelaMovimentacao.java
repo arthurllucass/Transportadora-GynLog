@@ -8,20 +8,26 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelos.classes.Movimentacao;
+import modelos.classes.TipoDeDespesa;
 import persistencia.MovimentacaoDAO;
+import persistencia.TipoDeDespesasDAO;
 
 public class TelaMovimentacao extends javax.swing.JFrame {
     
     private MovimentacaoController movimentacaoController = new MovimentacaoController(); /* coloquei como atributo da tela para que nao seja necessario 
     criar um controller toda vez que apertar os botoes*/
+    private int[] ids;
     
     public TelaMovimentacao() {
         initComponents();
+        carregarComboTipoDespesa();
         setLocationRelativeTo(null);
         LocalDate hoje = LocalDate.now();
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         jFormattedTextFieldData.setText(hoje.format(formato));
-        
+        jTextFieldIdVeiculo.setEditable(false);
+        jTableMovimentacoes.setDefaultEditor(Object.class, null);
+
         try {
             if (movimentacaoController.listarMovimentacoes().isEmpty()) {
                 jButtonListar.setEnabled(false);
@@ -42,7 +48,6 @@ public class TelaMovimentacao extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jTextFieldIdVeiculo = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jTextFieldIdTipoDespesa = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jFormattedTextFieldData = new javax.swing.JFormattedTextField();
         jLabel4 = new javax.swing.JLabel();
@@ -56,6 +61,7 @@ public class TelaMovimentacao extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jButtonProcurar = new javax.swing.JButton();
         jButtonProcurarIDDespesa = new javax.swing.JButton();
+        jComboBoxTipoDeDespesa = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableMovimentacoes = new javax.swing.JTable();
 
@@ -83,13 +89,7 @@ public class TelaMovimentacao extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("ID Tipo de Despesa");
-
-        jTextFieldIdTipoDespesa.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldIdTipoDespesaActionPerformed(evt);
-            }
-        });
+        jLabel2.setText("Tipo de Despesa");
 
         jLabel3.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -180,6 +180,12 @@ public class TelaMovimentacao extends javax.swing.JFrame {
             }
         });
 
+        jComboBoxTipoDeDespesa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxTipoDeDespesaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -195,11 +201,10 @@ public class TelaMovimentacao extends javax.swing.JFrame {
                         .addComponent(jLabel3)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jFormattedTextFieldData, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jTextFieldIdVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jTextFieldIdTipoDespesa, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jFormattedTextFieldData, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
+                            .addComponent(jTextFieldIdVeiculo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
+                            .addComponent(jComboBoxTipoDeDespesa, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(6, 6, 6)
@@ -253,10 +258,12 @@ public class TelaMovimentacao extends javax.swing.JFrame {
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextFieldIdTipoDespesa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTextFieldDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButtonProcurarIDDespesa, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jButtonProcurarIDDespesa, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBoxTipoDeDespesa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -277,7 +284,7 @@ public class TelaMovimentacao extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Veículo", "Despesa", "Descrição", "Data", "Valor"
+                "ID", "Veículo", "ID Despesa", "Descrição", "Data", "Valor"
             }
         ));
         jTableMovimentacoes.setFocusable(false);
@@ -304,8 +311,15 @@ public class TelaMovimentacao extends javax.swing.JFrame {
 
     private void jButtonCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCadastrarActionPerformed
         try {
+            if (jTextFieldIdVeiculo.getText().isEmpty()
+                    || jFormattedTextFieldValor.getText().isEmpty()
+                    || jTextFieldDescricao.getText().isEmpty()) {
+                throw new Exception("Preencha todos os campos!");
+            }
             int idVeiculo = Integer.parseInt(jTextFieldIdVeiculo.getText());
-            int idTipoDespesa = Integer.parseInt(jTextFieldIdTipoDespesa.getText());
+            int indiceSelecionado = jComboBoxTipoDeDespesa.getSelectedIndex();
+            if (indiceSelecionado == -1) throw new Exception("Selecione um Tipo de Despesa!");
+            int idTipoDespesa = ids[indiceSelecionado];
             double valor = Double.parseDouble(jFormattedTextFieldValor.getText());
             String descricao = jTextFieldDescricao.getText();
             String data = jFormattedTextFieldData.getText();
@@ -345,9 +359,8 @@ public class TelaMovimentacao extends javax.swing.JFrame {
 
     private void limparCamposPreenchidos() {
         jTextFieldIdVeiculo.setText("");
-        jTextFieldIdTipoDespesa.setText("");
+        jComboBoxTipoDeDespesa.setSelectedIndex(-1);
         jTextFieldDescricao.setText("");
-        jFormattedTextFieldData.setText("");
         jFormattedTextFieldValor.setText("");
         
         jTextFieldIdVeiculo.requestFocus();
@@ -357,12 +370,8 @@ public class TelaMovimentacao extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldIdVeiculoActionPerformed
 
     private void jFormattedTextFieldValorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFormattedTextFieldValorActionPerformed
-        jTextFieldIdTipoDespesa.requestFocus();
+        jComboBoxTipoDeDespesa.requestFocus();
     }//GEN-LAST:event_jFormattedTextFieldValorActionPerformed
-
-    private void jTextFieldIdTipoDespesaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldIdTipoDespesaActionPerformed
-        jTextFieldDescricao.requestFocus();
-    }//GEN-LAST:event_jTextFieldIdTipoDespesaActionPerformed
 
     private void jTextFieldDescricaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldDescricaoActionPerformed
         jFormattedTextFieldData.requestFocus();
@@ -404,9 +413,32 @@ public class TelaMovimentacao extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonProcurarActionPerformed
 
     private void jButtonProcurarIDDespesaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonProcurarIDDespesaActionPerformed
-        TelaBuscarDespesaMovimentacoes popup = new TelaBuscarDespesaMovimentacoes(jTextFieldIdTipoDespesa);
+        TelaBuscarDespesaMovimentacoes popup = new TelaBuscarDespesaMovimentacoes();
         popup.setVisible(true);
     }//GEN-LAST:event_jButtonProcurarIDDespesaActionPerformed
+
+    private void carregarComboTipoDespesa() {
+        try {
+            TipoDeDespesasDAO dao = new TipoDeDespesasDAO();
+            java.util.List<TipoDeDespesa> lista = dao.listaDeTiposDeDespesas();
+
+            jComboBoxTipoDeDespesa.removeAllItems();
+            ids = new int[lista.size()]; // usa o atributo da classe
+
+            for (int i = 0; i < lista.size(); i++) {
+                TipoDeDespesa tipo = lista.get(i);
+                jComboBoxTipoDeDespesa.addItem(tipo.getDescricao());
+                ids[i] = tipo.getIdTipoDeDespesa(); // salva no atributo
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao carregar tipos de despesa: " + e.getMessage());
+        }
+    }
+
+
+    private void jComboBoxTipoDeDespesaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxTipoDeDespesaActionPerformed
+
+    }//GEN-LAST:event_jComboBoxTipoDeDespesaActionPerformed
 
 
     public static void main(String args[]) {
@@ -449,6 +481,7 @@ public class TelaMovimentacao extends javax.swing.JFrame {
     private javax.swing.JButton jButtonProcurarIDDespesa;
     private javax.swing.JButton jButtonRemover;
     private javax.swing.JButton jButtonVoltar;
+    private javax.swing.JComboBox<String> jComboBoxTipoDeDespesa;
     private javax.swing.JFormattedTextField jFormattedTextFieldData;
     private javax.swing.JFormattedTextField jFormattedTextFieldValor;
     private javax.swing.JLabel jLabel1;
@@ -461,7 +494,6 @@ public class TelaMovimentacao extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableMovimentacoes;
     private javax.swing.JTextField jTextFieldDescricao;
-    private javax.swing.JTextField jTextFieldIdTipoDespesa;
     private javax.swing.JTextField jTextFieldIdVeiculo;
     // End of variables declaration//GEN-END:variables
 }

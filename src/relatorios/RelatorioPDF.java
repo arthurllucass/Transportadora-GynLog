@@ -1,53 +1,112 @@
+package relatorios;
+
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
+import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.FontFactory;
 import com.lowagie.text.Paragraph;
+import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import modelos.classes.Movimentacao;
+import modelos.classes.TipoDeVeiculos;
+import persistencia.TipoDeDespesasDAO;
+import persistencia.TipoDeVeiculoDAO;
 
 public class RelatorioPDF {
 
     private Font tituloFont;
     private Font corpoFont;
+    private String caminhoPasta;
 
     public RelatorioPDF() {
         this.tituloFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16);
         this.corpoFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
+        
+        String home = System.getProperty("user.home");
+        this.caminhoPasta = home + "/RelatoriosTransportadoraGynLog";
+        File pasta = new File(this.caminhoPasta);
+        if (!pasta.exists()) {
+            pasta.mkdirs();
+        }
+    }
+
+    private PdfPCell criarCelulaCentralizada(String texto) {
+        PdfPCell celula = new PdfPCell(new Paragraph(texto, corpoFont));
+        celula.setHorizontalAlignment(Element.ALIGN_CENTER);
+        return celula;
     }
 
     public void gerarDespesasDoMes(int mes, int ano, ArrayList<Movimentacao> lista) {
         try {
             Document documentoPDF = new Document();
-            PdfWriter.getInstance(documentoPDF, new FileOutputStream("Despesas_Frota_" + mes + "_" + ano + ".pdf"));
+            String caminhoArquivo = caminhoPasta + "/Despesas_Frota_" + mes + "_" + ano + ".pdf";
+            PdfWriter.getInstance(documentoPDF, new FileOutputStream(caminhoArquivo));
             documentoPDF.open();
 
-            documentoPDF.add(new Paragraph("Relatório: Somatório Geral das Despesas da Frota", tituloFont));
+            Paragraph titulo = new Paragraph("Relatório: Somatório Geral das Despesas da Frota", tituloFont);
+            titulo.setAlignment(Paragraph.ALIGN_CENTER);
+            documentoPDF.add(titulo);
             documentoPDF.add(new Paragraph("Mês/Ano: " + mes + "/" + ano));
             documentoPDF.add(Chunk.NEWLINE);
+            documentoPDF.add(new Paragraph("\n"));
 
-            // Criando a tabela com 5 colunas
-            PdfPTable table = new PdfPTable(5);
+            PdfPTable table = new PdfPTable(7);
             table.setWidthPercentage(100);
-            table.addCell("ID Veículo");
-            table.addCell("Tipo de Despesa");
-            table.addCell("Descrição");
-            table.addCell("Data");
-            table.addCell("Valor");
+            table.addCell(criarCelulaCentralizada("ID Veículo"));
+            table.addCell(criarCelulaCentralizada("Placa"));
+            table.addCell(criarCelulaCentralizada("Modelo"));
+            table.addCell(criarCelulaCentralizada("Tipo de Despesa"));
+            table.addCell(criarCelulaCentralizada("Descrição"));
+            table.addCell(criarCelulaCentralizada("Data"));
+            table.addCell(criarCelulaCentralizada("Valor"));
 
             double total = 0;
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            TipoDeDespesasDAO daoTipo = new TipoDeDespesasDAO();
+            TipoDeVeiculoDAO daoVeiculo = new TipoDeVeiculoDAO();
 
             for (Movimentacao movimentacao : lista) {
-                table.addCell(String.valueOf(movimentacao.getIdVeiculo()));
-                table.addCell(String.valueOf(movimentacao.getIdTipoDespesa())); // Se tiver nome do tipo, pode substituir
-                table.addCell(movimentacao.getDescricao());
-                table.addCell(sdf.format(movimentacao.getDataMovimentacao()));
-                table.addCell(String.format("R$ %.2f", movimentacao.getValor()));
+                String placa = "";
+                String modelo = "";
+                try {
+                    TipoDeVeiculos veiculo = daoVeiculo.buscarPorId(movimentacao.getIdVeiculo());
+                    placa = veiculo.getPlaca();
+                    modelo = veiculo.getModelo();
+                } catch (Exception e) {
+                    placa = "Não encontrado";
+                    modelo = "Não encontrado";
+                }
+
+                // buscar tipo de despesa
+                String nomeTipo = "";
+                try {
+                    nomeTipo = daoTipo.buscarPorId(movimentacao.getIdTipoDespesa()).getDescricao();
+                } catch (Exception e) {
+                    nomeTipo = "Tipo não encontrado";
+                }
+
+                table.addCell(criarCelulaCentralizada("" + movimentacao.getIdVeiculo()));
+                table.addCell(criarCelulaCentralizada(placa));
+                table.addCell(criarCelulaCentralizada(modelo));
+                table.addCell(criarCelulaCentralizada(nomeTipo));
+                table.addCell(criarCelulaCentralizada(movimentacao.getDescricao()));
+
+                String dataFormatada = "";
+                if (movimentacao.getDataMovimentacao() != null) {
+                    dataFormatada = sdf.format(movimentacao.getDataMovimentacao());
+                } else {
+                    dataFormatada = "Data não informada";
+                }
+                table.addCell(criarCelulaCentralizada(dataFormatada));
+
+                table.addCell(criarCelulaCentralizada("R$ " + movimentacao.getValor()));
+
                 total += movimentacao.getValor();
             }
 
@@ -62,6 +121,7 @@ public class RelatorioPDF {
             e.printStackTrace();
         }
     }
+    
+    
 }
-
 

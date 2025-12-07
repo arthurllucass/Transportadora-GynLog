@@ -11,22 +11,11 @@ public class TelaBuscarDespesaMovimentacoes extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaBuscarDespesaMovimentacoes.class.getName());
     private String idSelecionado = null;
-    private JTextField campoDestino; //campo que recebe o ID selecionado
 
     public TelaBuscarDespesaMovimentacoes() {
         initComponents();
         setLocationRelativeTo(null);
         carregarTabelaDespesas();
-        configurarCliqueNaTabela();
-        jTableTelaDespesas.setDefaultEditor(Object.class, null); //metodo para travar a ediçao na table
-    }
-
-    public TelaBuscarDespesaMovimentacoes(JTextField campoDestino) {
-        initComponents();
-        this.campoDestino = campoDestino;
-        setLocationRelativeTo(null);
-        carregarTabelaDespesas();
-        configurarCliqueNaTabela();
         jTableTelaDespesas.setDefaultEditor(Object.class, null);
     }
 
@@ -50,23 +39,6 @@ public class TelaBuscarDespesaMovimentacoes extends javax.swing.JFrame {
         }
     }
 
-    public void configurarCliqueNaTabela() {
-        jTableTelaDespesas.addMouseListener(new java.awt.event.MouseAdapter() {
-
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                if (evt.getClickCount() == 2) { // Duplo clique
-                    int linha = jTableTelaDespesas.getSelectedRow();
-                    if (linha >= 0) {
-                        String id = jTableTelaDespesas.getValueAt(linha, 0).toString();
-                        campoDestino.setText(id);
-                        dispose();
-                    }
-                }
-            }
-        });
-    }
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -74,7 +46,8 @@ public class TelaBuscarDespesaMovimentacoes extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableTelaDespesas = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         jTableTelaDespesas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {

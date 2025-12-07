@@ -46,7 +46,8 @@ public class TelaBuscarVeiculoMovimentacoes extends javax.swing.JFrame {
             model.addRow(new Object[]{
                 veiculos.getIdVeiculo(),
                 veiculos.getPlaca(),
-                veiculos.getMarca(),          
+                veiculos.getMarca(), 
+                veiculos.getModelo(),
                 veiculos.getAnoDeFabricacao()
             });
         }
