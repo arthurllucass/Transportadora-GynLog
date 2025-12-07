@@ -11,6 +11,9 @@ import modelos.classes.Movimentacao;
 import modelos.classes.TipoDeDespesa;
 import persistencia.MovimentacaoDAO;
 import persistencia.TipoDeDespesasDAO;
+import visao.TelaBuscarDespesaMovimentacoes;
+import visao.TelaBuscarVeiculoMovimentacoes;
+import visao.TelaPrincipal;
 
 public class TelaMovimentacao extends javax.swing.JFrame {
     
@@ -144,7 +147,6 @@ public class TelaMovimentacao extends javax.swing.JFrame {
 
         jButtonVoltar.setBackground(new java.awt.Color(204, 204, 204));
         jButtonVoltar.setFont(new java.awt.Font("Arial Black", 0, 12)); // NOI18N
-        jButtonVoltar.setForeground(new java.awt.Color(0, 0, 0));
         jButtonVoltar.setText("Voltar");
         jButtonVoltar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -164,7 +166,6 @@ public class TelaMovimentacao extends javax.swing.JFrame {
 
         jButtonProcurar.setBackground(new java.awt.Color(204, 204, 204));
         jButtonProcurar.setFont(new java.awt.Font("Arial Black", 0, 10)); // NOI18N
-        jButtonProcurar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/icons8-pesquisar-24.png"))); // NOI18N
         jButtonProcurar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonProcurarActionPerformed(evt);
@@ -173,7 +174,6 @@ public class TelaMovimentacao extends javax.swing.JFrame {
 
         jButtonProcurarIDDespesa.setBackground(new java.awt.Color(204, 204, 204));
         jButtonProcurarIDDespesa.setFont(new java.awt.Font("Arial Black", 0, 10)); // NOI18N
-        jButtonProcurarIDDespesa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/icons8-pesquisar-24.png"))); // NOI18N
         jButtonProcurarIDDespesa.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonProcurarIDDespesaActionPerformed(evt);
@@ -208,10 +208,10 @@ public class TelaMovimentacao extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(6, 6, 6)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButtonProcurar)
-                                    .addComponent(jButtonProcurarIDDespesa))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 75, Short.MAX_VALUE)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jButtonProcurar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButtonProcurarIDDespesa, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

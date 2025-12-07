@@ -1,12 +1,15 @@
 
 package controle;
 
+import modelos.classes.TipoDeVeiculos;
+import modelos.classes.TipoDeDespesa;
+import modelos.classes.Movimentacao;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
-import modelos.classes.Movimentacao;
+import modelos.classes.*;
 import persistencia.MovimentacaoDAO;
 
 public class MovimentacaoController {
@@ -69,6 +72,30 @@ public class MovimentacaoController {
         if (lista == null || lista.isEmpty()) throw new Exception("Nenhuma despesa encontrada para " + mes + "/" + ano + "!");
 
         return lista;
+    }
+    
+    public ArrayList<Movimentacao> filtrarPorPeriodo(ArrayList<Movimentacao> lista, LocalDate dataInicial, LocalDate dataFinal) throws Exception {
+
+        ArrayList<Movimentacao> listaAux = movimentacaoDAO.filtrarPorPeriodo(lista, dataInicial, dataFinal);
+        if (listaAux == null || listaAux.isEmpty()) throw new Exception("Nenhuma despesa encontrada para " + dataInicial.toString() + "/" + dataFinal.toString() + "!");
+
+        return listaAux;
+    }
+    
+    public ArrayList<Movimentacao> filtrarPorVeiculo(ArrayList<Movimentacao> lista, TipoDeVeiculos veiculo) throws Exception {
+
+        ArrayList<Movimentacao> listaAux = movimentacaoDAO.filtrarPorVeiculo(lista, veiculo);
+        if (listaAux == null || listaAux.isEmpty()) throw new Exception("Nenhuma despesa encontrada para " + veiculo.getPlaca() + "!");
+
+        return listaAux;
+    }
+    
+    public ArrayList<Movimentacao> filtrarPorDespesa(ArrayList<Movimentacao> lista, TipoDeDespesa despesa) throws Exception {
+
+        ArrayList<Movimentacao> listaAux = movimentacaoDAO.filtrarPorDespesa(lista, despesa);
+        if (listaAux == null || listaAux.isEmpty()) throw new Exception("Nenhuma despesa encontrada para " + despesa.getDescricao() + "!");
+
+        return listaAux;
     }
     
     public double buscarTotalDespesasDoMes(int mes, int ano) throws Exception {

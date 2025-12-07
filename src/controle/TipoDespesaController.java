@@ -4,6 +4,7 @@
  */
 package controle;
 
+import java.util.ArrayList;
 import modelos.classes.TipoDeDespesa;
 import persistencia.TipoDeDespesasDAO;
 /**
@@ -40,6 +41,10 @@ public class TipoDespesaController {
         
         objDeDespesasDAO.salvar(obj);
         
+    }
+    
+    public ArrayList<TipoDeDespesa> listar() throws Exception{
+        return objDeDespesasDAO.listaDeTiposDeDespesas();
     }
     
 }

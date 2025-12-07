@@ -7,10 +7,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
-import modelos.classes.Movimentacao;
+import modelos.classes.*;
 import modelos.interfaces.IMovimentacaoCRUD;
 
 public class MovimentacaoDAO implements IMovimentacaoCRUD {
@@ -179,4 +180,67 @@ public class MovimentacaoDAO implements IMovimentacaoCRUD {
             throw new Exception("Erro ao filtrar despesas do mês: " + erro.getMessage());
         }
     }
-}
+    
+    public ArrayList<Movimentacao> filtrarPorPeriodo(ArrayList<Movimentacao> lista, LocalDate dataInicial, LocalDate dataFinal) throws Exception{
+    
+        ArrayList<Movimentacao> resultado = new ArrayList<>();    
+        try{
+
+            for (Movimentacao mov : lista) {
+
+                // Pega a data que vem do banco (java.sql.Date)
+                Date data = mov.getDataMovimentacao();
+
+                // Converte para LocalDate
+                LocalDate dataMov = data.toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate();
+
+                // Verifica se está dentro do período (incluindo datas iguais)
+                if (!dataMov.isBefore(dataInicial) && !dataMov.isAfter(dataFinal)) {
+                    resultado.add(mov);
+                }
+            }
+        }catch (Exception erro) {
+            throw new Exception("Erro ao filtrar despesas do mês: " + erro.getMessage());
+        }
+            return resultado;
+        }
+    
+    public ArrayList<Movimentacao> filtrarPorVeiculo(ArrayList<Movimentacao> lista, TipoDeVeiculos veiculo) throws Exception {
+        
+        ArrayList<Movimentacao> resultado = new ArrayList<>();    
+        try{
+
+            for (Movimentacao mov : lista) {
+                // Verifica se está dentro do período (incluindo datas iguais)
+                if (mov.getIdVeiculo() == veiculo.getIdVeiculo()) {
+                    resultado.add(mov);
+                }
+            }
+        }catch (Exception erro) {
+            throw new Exception("Erro ao filtrar despesas por Veiculo: " + erro.getMessage());
+        }
+            return resultado;
+        }
+    
+    public ArrayList<Movimentacao> filtrarPorDespesa(ArrayList<Movimentacao> lista, TipoDeDespesa despesa) throws Exception {
+        
+        ArrayList<Movimentacao> resultado = new ArrayList<>();    
+        try{
+
+            for (Movimentacao mov : lista) {
+                // Verifica se está dentro do período (incluindo datas iguais)
+                if (mov.getIdTipoDespesa() == despesa.getIdTipoDeDespesa()) {
+                    resultado.add(mov);
+                }
+            }
+        }catch (Exception erro) {
+            throw new Exception("Erro ao filtrar despesas por Tipo: " + erro.getMessage());
+        }
+            return resultado;
+        }
+        
+    }
+
+   

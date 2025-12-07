@@ -4,10 +4,10 @@
  */
 package controle;
 
+import modelos.classes.TipoDeVeiculos;
 import modelos.classes.*;
 import persistencia.TipoDeVeiculoDAO;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 import modelos.classes.StatusVeiculo;
 
 /**
